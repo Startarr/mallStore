@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hxx.mallstore.mapper.ProductMapper">
+    <resultMap id="ProductEntityMap" type="com.hxx.mallstore.entity.Product">
+        <id column="id" property="id"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="item_type" property="itemType"/>
+        <result column="sell_point" property="sellPoint"/>
+        <result column="created_user" property="createdUser"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="modified_user" property="modifiedUser"/>
+        <result column="modified_time" property="modifiedTime"/>
+    </resultMap>
+
+    <select id="queryRecentProduct" resultMap="ProductEntityMap">
+        select * from t_product where status=1 order by created_time desc limit 0,4
+    </select>
+
+    <select id="queryHotProduct" resultMap="ProductEntityMap">
+        select * from t_product where status=1 order by priority desc,created_time desc limit 0,4
+    </select>
+
+    <select id="findById" resultMap="ProductEntityMap">
+        select * from t_product where id=#{id}
+    </select>
+
+    <select id="queryPageProduct" resultMap="ProductEntityMap">
+        select * from  t_product where status=1 order by ${type} desc
+    </select>
+
+
+<!--    <select id="queryPageProduct" resultMap="ProductEntityMap">-->
+<!--        select * from  t_product-->
+<!--        <if test="type!=null">-->
+<!--            order by #{type} desc-->
+<!--        </if>-->
+<!--        <if test="page!=null">-->
+<!--            limit #{page},8-->
+<!--        </if>-->
+<!--    </select>-->
+
+
+</mapper>

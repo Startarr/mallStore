@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hxx.mallstore.mapper.OrderMapper">
+    <resultMap id="OrderVoMap" type="com.hxx.mallstore.vo.OrderVO">
+        <result column="order_time" property="orderTime"/>
+        <result column="total_price" property="totalPrice"/>
+        <result column="pay_time" property="payTime"/>
+        <result column="created_user" property="createdUser"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="modified_user" property="modifiedUser"/>
+        <result column="modified_time" property="modifiedTime"/>
+    </resultMap>
+
+    <!-- 插入订单数据 -->
+    <insert id="insertOrder" useGeneratedKeys="true" keyProperty="oid">
+        insert into t_order (uid,
+                             total_price, status, order_time, pay_time, created_user, created_time, modified_user,
+                             modified_time)
+        values (#{uid}, #{totalPrice}, #{status}, #{orderTime}, #{payTime}, #{createdUser},
+                #{createdTime}, #{modifiedUser}, #{modifiedTime})
+    </insert>
+
+    <!-- 插入订单商品数据 -->
+    <insert id="insertOrderItem" useGeneratedKeys="true" keyProperty="id">
+        insert into t_order_item (oid, pid, num, created_user,
+                                  created_time, modified_user, modified_time)
+        values (#{oid}, #{pid}, #{num}, #{createdUser},
+                #{createdTime}, #{modifiedUser}, #{modifiedTime})
+    </insert>
+
+    <select id="selectOrders" resultMap="OrderVoMap">
+        select
+            uid,oid,created_user,created_time,modified_user,modified_time,status,order_time,pay_time,total_price
+        from
+            t_order
+        where
+            uid = #{uid}
+        order by
+            order_time desc
+    </select>
+
+    <select id="selectOrderItems" resultType="com.hxx.mallstore.vo.OrderItemOV">
+        select
+            title,image,price,t_order_item.num
+        from
+            t_product
+        left join
+                t_order_item
+        on
+            t_product.id = t_order_item.pid
+        where
+            oid = #{oid}
+    </select>
+
+</mapper>
